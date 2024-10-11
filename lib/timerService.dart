@@ -1,42 +1,163 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+
+import 'utils.dart';
 
 class TimerService extends ChangeNotifier{
   Timer? timer;
-  double durationOfFocus = 1500;
-  double timeLeft = 1500;
-  int round = 1500;
+  double durationOfFocus = minToSeconds(.1);
+  double durationOfBreak = minToSeconds(.05);
+  double durationOfLongBreak = minToSeconds(.1);
+  double timeLeft = minToSeconds(.1);
+  int round = 0;
   bool isPlaying = false;
+  AppStatus appStatus = AppStatus.stopped;
+  AppStatus previousAppStatus = AppStatus.stopped;
+  var statusStrings = ["Focus Time", "Break Time", "Long Break Time", "Stopped"];
+  String statusString = "Stopped";
+  var colorsOfProgressWidgets = [Colors.green[300], Colors.green[300], Colors.green[300], Colors.green[300]];
+  var inUseProgressWidgets = [false, false, false, false];
+  var isFilledProgressWidgets = [false, false, false, false];
 
-  void setDurationOfFocus(double time)
+
+  void changeTimesDuration(double focusDuration, double breakDuration, double longBreakDirection)
   {
-    durationOfFocus = time;
-    timeLeft = time;
+    durationOfFocus = minToSeconds(focusDuration);
+    durationOfBreak = minToSeconds(breakDuration);
+    durationOfLongBreak = minToSeconds(longBreakDirection);
+    notifyListeners();
+  }
+
+  void setTimerTime(double timeToSet)
+  {
+    timeLeft = timeToSet;
     notifyListeners();
   }
 
   void startTimer()
   {
+    if (round == 0) {
+      round++;
+      setAppStatus(AppStatus.focus);
+    } else {
+      setAppStatus(previousAppStatus);
+    }
     isPlaying = true;
-    timeLeft--;
+    setProgressInUseAndColors();
     notifyListeners();
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      timeLeft--;
-      notifyListeners();
-    });
+    timer = Timer.periodic(
+      const Duration(seconds: 1), 
+      (timer) {
+        timeLeft--;
+        if (timeLeft < 0) {
+          timerEnded();
+        }
+        setProgressInUseAndColors();
+        notifyListeners();
+      },
+    );
   }
 
   void stopTimer()
   {
     isPlaying = false;
     timer?.cancel();
+    setAppStatus(AppStatus.stopped);
+    notifyListeners();
+  }
+
+  void timerEnded()
+  {
+    round++;
+    if (appStatus == AppStatus.focus) {
+      if (round >= 8) { 
+        setAppStatus(AppStatus.longBreak);
+        setTimerTime(durationOfLongBreak);
+        return;
+      } else {
+        setAppStatus(AppStatus.shortBreak);
+        setTimerTime(durationOfBreak);
+      }
+      timeLeft++; //Otherwise the first second of the break time is cut
+    } else if (appStatus == AppStatus.shortBreak || appStatus == AppStatus.longBreak) {
+      if (appStatus == AppStatus.longBreak) {
+        round = 1;
+      }
+      setAppStatus(AppStatus.focus);
+      setTimerTime(durationOfFocus);
+    }
+    setProgressInUseAndColors();
     notifyListeners();
   }
 
   void resetTimer()
   {
     stopTimer();
-    setDurationOfFocus(1500);
+    round = 0;
+    setAppStatus(AppStatus.stopped);
+    setTimerTime(durationOfFocus);
+    setProgressInUseAndColors();
+    notifyListeners();
+  }
+
+  void setAppStatus(AppStatus newAppStatus){
+    previousAppStatus = appStatus;
+    appStatus = newAppStatus;
+    switch (newAppStatus) {
+      case AppStatus.focus:
+        statusString = statusStrings[0];
+        break;
+      case AppStatus.shortBreak:
+        statusString = statusStrings[1];
+        break;
+      case AppStatus.longBreak:
+        statusString = statusStrings[2];
+        break;
+      case AppStatus.stopped:
+        statusString = statusStrings[3];
+        break;
+    }
+
+    notifyListeners();
+  }
+
+  void setProgressInUseAndColors()
+  {
+    inUseProgressWidgets = [false, false, false, false];
+    switch (round) {
+      case 0:
+        isFilledProgressWidgets = [false, false, false, false];
+        colorsOfProgressWidgets = [Colors.green[300], Colors.green[300], Colors.green[300], Colors.green[300]];
+        break;
+      case 1:
+        isFilledProgressWidgets = [false, false, false, false];
+        colorsOfProgressWidgets = [Colors.green[300], Colors.green[300], Colors.green[300], Colors.green[300]];
+        inUseProgressWidgets[0] = true;
+        break;
+      case 2:
+        isFilledProgressWidgets[0] = true;
+        colorsOfProgressWidgets[0] = Colors.blue[300];
+      case 3: 
+        inUseProgressWidgets[1] = true;
+        break;
+      case 4:
+        isFilledProgressWidgets[1] = true;
+        colorsOfProgressWidgets[1] = Colors.blue[300];
+        break;
+      case 5:
+        inUseProgressWidgets[2] = true;
+        break;
+      case 6:
+        isFilledProgressWidgets[2] = true;
+        colorsOfProgressWidgets[2] = Colors.blue[300];
+        break;
+      case 7:
+        inUseProgressWidgets[3] = true;
+        break;
+      case 8:
+        isFilledProgressWidgets[3] = true;
+        colorsOfProgressWidgets = [Colors.purple[300], Colors.purple[300], Colors.purple[300], Colors.purple[300]];
+        break;
+    }
   }
 }

@@ -9,7 +9,19 @@ TextStyle textStyle(double size, [Color? color, FontWeight? fw]){
   );
 }
 
+double minToSeconds(double timeInMinutes)
+{
+  return timeInMinutes * 60;
+}
+
 Widget newSeparator(double size)
 {
   return SizedBox(height: size, width: size);
+}
+
+enum AppStatus {
+  focus,
+  shortBreak,
+  longBreak,
+  stopped,
 }

@@ -2,11 +2,11 @@ import 'package:dring/timerService.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils.dart';
+import 'progressDotsWidget.dart';
+import 'timeSelectionWidget.dart';
 
 class TimerWidget extends StatelessWidget {
-
   TimerWidget({super.key});
-  String statusText = "Focus Time";
 
   @override
   Widget build(BuildContext context) {
@@ -15,24 +15,23 @@ class TimerWidget extends StatelessWidget {
     return Column(
       children: [
         Text(
-          statusText, 
-          style: textStyle(14, Colors.black, FontWeight.w500),
+          "rounds : ${provider.round}",
+          style: textStyle(10, Colors.black, FontWeight.w400),
+        ),
+        Text(
+          provider.statusString,
+          style: textStyle(14, 
+            provider.appStatus == AppStatus.focus ? Colors.green: (provider.appStatus == AppStatus.shortBreak ? Colors.blue : (provider.appStatus == AppStatus.longBreak ? Colors.purple : Colors.black)), 
+            FontWeight.w500
+          ),
         ),
         newSeparator(5),
         Text(
-          "${(provider.timeLeft / 60).floor()}:${(provider.timeLeft % 60).round()}${(provider.timeLeft % 60).round() == 0 ? "0" : ""}",
+          "${(provider.timeLeft / 60).floor()}:${(provider.timeLeft % 60).round() < 10 ? "0" : ""}${(provider.timeLeft % 60).round()}",
           style: textStyle(50, Colors.black, FontWeight.w600),
         ),
         newSeparator(5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(width: 10,height: 10, margin: const EdgeInsets.all(7), decoration: BoxDecoration(color: Colors.green[100], borderRadius: const BorderRadius.all(Radius.circular(10)))),
-            Container(width: 10,height: 10, margin: const EdgeInsets.all(7), decoration: BoxDecoration(color: Colors.green[100], borderRadius: const BorderRadius.all(Radius.circular(10)))),
-            Container(width: 10,height: 10, margin: const EdgeInsets.all(7), decoration: BoxDecoration(color: Colors.green[100], borderRadius: const BorderRadius.all(Radius.circular(10)))),
-            Container(width: 10,height: 10, margin: const EdgeInsets.all(7), decoration: BoxDecoration(color: Colors.green[100], borderRadius: const BorderRadius.all(Radius.circular(10)))),
-          ],
-        ),
+        const ProgressDotsWidget(),
         Container(width: 60,height: 60, margin: const EdgeInsets.all(7), decoration: BoxDecoration(color: Colors.green[50], borderRadius: const BorderRadius.all(Radius.circular(100))),
           child: IconButton(
             icon : provider.isPlaying 
@@ -48,25 +47,9 @@ class TimerWidget extends StatelessWidget {
           ),
         ),
         newSeparator(5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "25min | 5min", 
-              style: textStyle(18, Colors.green[300], FontWeight.w500),
-            ),
-          ],
-        ),
-        newSeparator(6),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "45min | 15min", 
-              style: textStyle(16, Colors.green[100], FontWeight.w500),
-            ),
-          ],
-        ),
+        TimeSelectionWidget(),
+        TimeSelectionWidget(focusDuration: 45, pauseDuration: 15),
+        TimeSelectionWidget(focusDuration: .1, pauseDuration: .05),
         newSeparator(5),
         Container(width: 60,height: 60, margin: const EdgeInsets.all(7), 
           decoration: const BoxDecoration(
