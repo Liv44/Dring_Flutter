@@ -30,6 +30,7 @@ environment:
 dependencies:
   provider:
   google_fonts:
+  awesome_notifications: ^0.10.0
   flutter:
     sdk: flutter
 

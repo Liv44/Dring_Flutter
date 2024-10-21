@@ -19,7 +19,7 @@ class TimeSelectionWidget extends StatefulWidget {
   State<TimeSelectionWidget> createState() => _TimeSelectionWidgetState();
 }
 
-class _TimeSelectionWidgetState extends State<TimeSelectionWidget> {
+class _TimeSelectionWidgetState extends State<TimeSelectionWidget> {  
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TimerService>(context);

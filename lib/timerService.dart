@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 
@@ -71,10 +72,12 @@ class TimerService extends ChangeNotifier{
     round++;
     if (appStatus == AppStatus.focus) {
       if (round >= 8) { 
+        TriggerNotification("Dring ! Timer is up !", "You did 4 focus time in a row, it's time for a long break !");
         setAppStatus(AppStatus.longBreak);
         setTimerTime(durationOfLongBreak);
         return;
       } else {
+        TriggerNotification("Dring ! Timer is up !", "Focus time is over, time for a short break !");
         setAppStatus(AppStatus.shortBreak);
         setTimerTime(durationOfBreak);
       }
@@ -83,6 +86,7 @@ class TimerService extends ChangeNotifier{
       if (appStatus == AppStatus.longBreak) {
         round = 1;
       }
+      TriggerNotification("Dring ! Timer is up !", "Break is over, time to focus up !");
       setAppStatus(AppStatus.focus);
       setTimerTime(durationOfFocus);
     }
@@ -159,5 +163,17 @@ class TimerService extends ChangeNotifier{
         colorsOfProgressWidgets = [Colors.purple[300], Colors.purple[300], Colors.purple[300], Colors.purple[300]];
         break;
     }
+  }
+
+  void TriggerNotification(String tilte, String body) 
+  {
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 10,
+        channelKey: 'basic_channel',
+        title: tilte,
+        body: body,
+      ),
+    );
   }
 }
