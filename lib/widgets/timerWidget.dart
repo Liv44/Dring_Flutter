@@ -1,4 +1,5 @@
 import 'package:dring/timerService.dart';
+import 'package:dring/widgets/historyButtonWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils.dart';
@@ -6,7 +7,7 @@ import 'progressDotsWidget.dart';
 import 'timeSelectionWidget.dart';
 
 class TimerWidget extends StatelessWidget {
-  TimerWidget({super.key});
+  const TimerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,21 +48,27 @@ class TimerWidget extends StatelessWidget {
           ),
         ),
         newSeparator(5),
-        TimeSelectionWidget(),
-        TimeSelectionWidget(focusDuration: 45, pauseDuration: 15),
-        TimeSelectionWidget(focusDuration: .1, pauseDuration: .05),
+        const TimeSelectionWidget(),
+        const TimeSelectionWidget(focusDuration: 45, pauseDuration: 15),
+        const TimeSelectionWidget(focusDuration: .1, pauseDuration: .05),
         newSeparator(5),
-        Container(width: 60,height: 60, margin: const EdgeInsets.all(7), 
-          decoration: const BoxDecoration(
-            color: Colors.transparent, 
-            borderRadius: BorderRadius.all(Radius.circular(100))
-          ),
-          child: IconButton(
-            icon : Icon(Icons.replay_outlined, size: 40, color: Colors.green[500]),
-            onPressed: () {
-              provider.resetTimer();
-            },
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(width: 60,height: 60, margin: const EdgeInsets.all(7), 
+              decoration: const BoxDecoration(
+                color: Colors.transparent, 
+                borderRadius: BorderRadius.all(Radius.circular(100))
+              ),
+              child: IconButton(
+                icon : Icon(Icons.replay_outlined, size: 40, color: Colors.green[500]),
+                onPressed: () {
+                  provider.resetTimer();
+                },
+              ),
+            ),
+            const HistoryButtonWidget(),
+          ],
         ),
       ],
     );
