@@ -1,5 +1,7 @@
 import 'package:dring/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 
 class DayHistoryWidget extends StatefulWidget {
   const DayHistoryWidget({
@@ -22,15 +24,22 @@ class _DayhistorywidgetState extends State<DayHistoryWidget> {
   Widget build(BuildContext context) {
     return ExpansionTile(
       title: Text(
-        widget.date.toString(),
-        style: textStyle(16, Colors.black ,FontWeight.w500),
+        DateFormat('EEE. d MMM yyyy').format(widget.date),
+        style: textStyle(16, Colors.black ,FontWeight.w700),
       ),
       expandedCrossAxisAlignment : CrossAxisAlignment.start,
+      minTileHeight: 10,
+      tilePadding: const EdgeInsets.all(1),
+      childrenPadding: const EdgeInsets.only(left: 42, top: 5, bottom: 5),
+      expandedAlignment: Alignment.centerLeft,
+      controlAffinity: ListTileControlAffinity.leading,
+      iconColor: Colors.black,
       children: [
           Text(
             "Total work time : ${widget.workTimeInHours} hours",
             style: textStyle(13, Colors.black ,FontWeight.w200),
           ),
+          newSeparator(10),
           Text(
             "Total sessions : ${widget.numberOfSessions} sessions",
             style: textStyle(13, Colors.black ,FontWeight.w200),

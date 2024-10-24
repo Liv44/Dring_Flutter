@@ -27,7 +27,7 @@ class HistoryButtonWidget extends StatelessWidget {
             context: context, 
             
             builder: (context) => AlertDialog(
-              title: Text('History', style: textStyle(20, Colors.black, FontWeight.w600),),
+              title: Text('History', style: textStyle(25, Colors.black, FontWeight.w700),),
 
               contentPadding: const EdgeInsets.all(20),
 
@@ -36,13 +36,15 @@ class HistoryButtonWidget extends StatelessWidget {
                   crossAxisAlignment : CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Numbers of days worked in total : 27 days",
-                      style: textStyle(13, Colors.black, FontWeight.w200),
+                      "Total number of days worked : 27 days",
+                      style: textStyle(15, Colors.black, FontWeight.w200),
                     ),
+                    newSeparator(15),
                     Text(
-                      "Numbers of sessions in total : 718 sessions",
-                      style: textStyle(13, Colors.black, FontWeight.w200),
+                      "Total number of sessions : 718 sessions",
+                      style: textStyle(15, Colors.black, FontWeight.w200),
                     ),
+                    newSeparator(15),
                     DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
                     DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
                     DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
