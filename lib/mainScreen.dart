@@ -1,17 +1,22 @@
+import 'dart:math';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dring/widgets/timerWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:dring/timerService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen({
+    super.key
+  });
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  String test = "test";
   
   @override
   void initState() {
@@ -20,26 +25,18 @@ class _MainScreenState extends State<MainScreen> {
         AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
-
-    getData();
-
     super.initState();
   }
 
-  getData() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    setState(() {
-      test = sharedPreferences.getString('history')!;
-    });
-  }
-
-  yep() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString('history', "Cette valeur a été changée 😎");
-  }
+  // updateHistory() async {
+  //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  //   sharedPreferences.setString('history', "Nouvel History 😎 ${Random().nextInt(25)}");
+  // }
   
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<TimerService>(context);
+
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -49,20 +46,13 @@ class _MainScreenState extends State<MainScreen> {
       ),
 
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
+      home: const Scaffold(
         backgroundColor: Colors.white,
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(test),
-              TextButton(
-                onPressed: () async{
-                  yep();
-                },
-                child: const Text("clique"),
-              ),
-              const TimerWidget()
+              TimerWidget()
             ],
           ),
         ),

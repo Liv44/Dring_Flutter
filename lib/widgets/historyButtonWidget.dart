@@ -1,12 +1,33 @@
 import 'dart:math';
-
 import 'package:dring/utils.dart';
 import 'package:dring/widgets/dayHistoryWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HistoryButtonWidget extends StatelessWidget {
+
+class HistoryButtonWidget extends StatefulWidget {
   const HistoryButtonWidget({super.key});
 
+  @override
+  State<HistoryButtonWidget> createState() => _HistoryButtonWidgetState();
+}
+
+class _HistoryButtonWidgetState extends State<HistoryButtonWidget> {
+  String history = "null";
+
+  @override
+  void initState() {
+    getHistory();
+    super.initState();
+  }
+
+  getHistory() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      history = sharedPreferences.getString('history')!;
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,6 +44,7 @@ class HistoryButtonWidget extends StatelessWidget {
         icon : Icon(Icons.book, size: 40, color: Colors.green[500]),
         
         onPressed: () {
+          getHistory();
           showDialog(
             context: context, 
             
@@ -45,15 +67,10 @@ class HistoryButtonWidget extends StatelessWidget {
                       style: textStyle(15, Colors.black, FontWeight.w200),
                     ),
                     newSeparator(15),
-                    DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
-                    DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
-                    DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
-                    DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
-                    DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
-                    DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
-                    DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
-                    DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
-                    DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
+
+                    Text(history),
+                    newSeparator(15),
+
                     DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
                     DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
                     DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),

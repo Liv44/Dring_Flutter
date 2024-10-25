@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:dring/history.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'utils.dart';
 
@@ -19,6 +23,8 @@ class TimerService extends ChangeNotifier{
   var colorsOfProgressWidgets = [Colors.green[300], Colors.green[300], Colors.green[300], Colors.green[300]];
   var inUseProgressWidgets = [false, false, false, false];
   var isFilledProgressWidgets = [false, false, false, false];
+
+  SharedPreferences? sharedPreferences;
 
 
   void changeTimesDuration(double focusDuration, double breakDuration, double longBreakDirection)
@@ -69,15 +75,16 @@ class TimerService extends ChangeNotifier{
 
   void timerEnded()
   {
+    setHistory();
     round++;
     if (appStatus == AppStatus.focus) {
       if (round >= 8) { 
-        TriggerNotification("Dring ! Timer is up !", "You did 4 focus time in a row, it's time for a long break !");
+        triggerNotification("Dring ! Timer is up !", "You did 4 focus time in a row, it's time for a long break !");
         setAppStatus(AppStatus.longBreak);
         setTimerTime(durationOfLongBreak);
         return;
       } else {
-        TriggerNotification("Dring ! Timer is up !", "Focus time is over, time for a short break !");
+        triggerNotification("Dring ! Timer is up !", "Focus time is over, time for a short break !");
         setAppStatus(AppStatus.shortBreak);
         setTimerTime(durationOfBreak);
       }
@@ -86,7 +93,7 @@ class TimerService extends ChangeNotifier{
       if (appStatus == AppStatus.longBreak) {
         round = 1;
       }
-      TriggerNotification("Dring ! Timer is up !", "Break is over, time to focus up !");
+      triggerNotification("Dring ! Timer is up !", "Break is over, time to focus up !");
       setAppStatus(AppStatus.focus);
       setTimerTime(durationOfFocus);
     }
@@ -165,7 +172,7 @@ class TimerService extends ChangeNotifier{
     }
   }
 
-  void TriggerNotification(String tilte, String body) 
+  void triggerNotification(String tilte, String body) 
   {
     AwesomeNotifications().createNotification(
       content: NotificationContent(
@@ -176,4 +183,25 @@ class TimerService extends ChangeNotifier{
       ),
     );
   }
+
+  setHistory() async {
+    History newHistory = History();
+    newHistory.totalNumberOfSessions = Random().nextInt(100);
+    newHistory.totalTimeWorkedInDays = Random().nextDouble() * 72;
+    
+    Session newSession = Session();
+    newSession.date = DateTime.now();
+    newSession.totalOfSessions = Random().nextInt(6);
+    newSession.workedTimeInHours = Random().nextDouble() * 2;
+
+    List<Session> newSessions = [newSession, newSession, newSession];
+    newHistory.sessions = newSessions;
+
+    
+
+
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('history', "Nouvel historique (depuis le service) : ${Random().nextInt(100)}");
+  }
+
 }
