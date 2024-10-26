@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -185,23 +186,16 @@ class TimerService extends ChangeNotifier{
   }
 
   setHistory() async {
-    History newHistory = History();
-    newHistory.totalNumberOfSessions = Random().nextInt(100);
-    newHistory.totalTimeWorkedInDays = Random().nextDouble() * 72;
-    
-    Session newSession = Session();
-    newSession.date = DateTime.now();
-    newSession.totalOfSessions = Random().nextInt(6);
-    newSession.workedTimeInHours = Random().nextDouble() * 2;
-
+    Session newSession = Session(DateTime.now(), Random().nextDouble() * 2, Random().nextInt(6));
     List<Session> newSessions = [newSession, newSession, newSession];
-    newHistory.sessions = newSessions;
 
-    
+    History newHistory = History(Random().nextDouble() * 72, Random().nextInt(100), newSessions);
 
+    Map<String, dynamic> jsonMap = newHistory.toJson();
+    String json = jsonEncode(jsonMap);
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString('history', "Nouvel historique (depuis le service) : ${Random().nextInt(100)}");
+    sharedPreferences.setString('history', "Nouvel historique (depuis le service) : $json");
   }
-
+  
 }

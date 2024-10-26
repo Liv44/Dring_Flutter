@@ -27,16 +27,9 @@ class _MainScreenState extends State<MainScreen> {
     });
     super.initState();
   }
-
-  // updateHistory() async {
-  //   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  //   sharedPreferences.setString('history', "Nouvel History 😎 ${Random().nextInt(25)}");
-  // }
   
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<TimerService>(context);
-
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.blue,
