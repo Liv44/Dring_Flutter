@@ -25,12 +25,29 @@ class _HistoryButtonWidgetState extends State<HistoryButtonWidget> {
 
   getHistory() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    
+    String string = sharedPreferences.getString('history')!;
+    Map<String, dynamic> json = await jsonDecode(string);
+    History fromJson = History.fromJson(json);
+
     setState(() {
-      String string = sharedPreferences.getString('history')!;
-      Map<String, dynamic> json = jsonDecode(string);
-      history = History.fromJson(json);
+      history = fromJson;
     });
   }
+
+  List<DayHistoryWidget> getSession(List<Session> sessions) {
+    List<DayHistoryWidget> widgetList = [];
+    for (int i = 0; i < sessions.length; i++) {
+      Session session = sessions[i];
+      DayHistoryWidget newItem = DayHistoryWidget(
+        date: session.date, 
+        workTimeInHours: session.workedTimeInHours.round(), 
+        numberOfSessions: session.totalOfSessions
+      );
+      widgetList.add(newItem);
+    }
+    return widgetList;
+  } 
   
   @override
   Widget build(BuildContext context) {
@@ -62,20 +79,19 @@ class _HistoryButtonWidgetState extends State<HistoryButtonWidget> {
                   crossAxisAlignment : CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Total number of days worked : 27 days",
+                      "Total number of days worked :  ${history.totalTimeWorkedInDays.round()} days",
                       style: textStyle(15, Colors.black, FontWeight.w200),
                     ),
                     newSeparator(15),
                     Text(
-                      "Total number of sessions : 718 sessions",
+                      "Total number of sessions : ${history.totalNumberOfSessions} sessions",
                       style: textStyle(15, Colors.black, FontWeight.w200),
                     ),
                     newSeparator(15),
 
-                    Text("sessions : ${history.totalNumberOfSessions} time ${history.totalTimeWorkedInDays}"),
-                    newSeparator(15),
-
-                    DayHistoryWidget(date: DateTime.now(), workTimeInHours: Random().nextInt(25), numberOfSessions: Random().nextInt(100)),
+                    Column(
+                     children: getSession(history.sessions),
+                    ),
                   ],
                 ),
               ),

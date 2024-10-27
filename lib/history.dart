@@ -37,17 +37,19 @@ class History {
   }
 
   factory History.fromJson(Map<String, dynamic> json) {
-    History newHistory =  History(0, 0, []);
+    List sessionList = json['sessions'];
+    List<Session> newSessionList = [];
 
-    // print("################################## 1 ${json['totalTimeWorkedInDays']}");
-    // print("################################## 2 ${json['totalNumberOfSessions']}");
-    // newHistory.totalTimeWorkedInDays = json['totalTimeWorkedInDays'];
-    // newHistory.totalNumberOfSessions = json['totalNumberOfSessions'];
+    sessionList.forEach((session) {
+      Map<String, dynamic> sessionTyped = session as Map<String, dynamic>;
+      newSessionList.add(Session.fromJson(sessionTyped));
+    });
 
-    // List<Session> sessionList = json['sessions'];
-    newHistory.sessions = [];
-
-    return newHistory;
+    return History( 
+      json['totalTimeWorkedInDays'] as double,
+      json['totalNumberOfSessions'] as int,
+      newSessionList
+    );
   }
 }
 
@@ -62,9 +64,9 @@ class Session {
     return "${date.day},${date.month},${date.year}";
   }
 
-  DateTime jsonToDate(String string) {
+  static DateTime jsonToDate(String string) {
     List list = string.split(',');
-    DateTime result = DateTime(list[2], list[1], list[0]);
+    DateTime result = DateTime(int.parse(list[2]), int.parse(list[1]), int.parse(list[0]));
     return result;
   }
 
@@ -73,4 +75,13 @@ class Session {
     'workedTimeInHours': workedTimeInHours,
     'totalOfSessions': totalOfSessions
   };
+
+  factory Session.fromJson(Map<String, dynamic> json) {
+    DateTime newDate = jsonToDate(json['date']);
+    return Session(
+      newDate,
+      json['workedTimeInHours'] as double ,
+      json['totalOfSessions'] as int 
+    );
+  }
 }

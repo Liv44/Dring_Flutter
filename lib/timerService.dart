@@ -28,6 +28,7 @@ class TimerService extends ChangeNotifier{
   SharedPreferences? sharedPreferences;
 
 
+
   void changeTimesDuration(double focusDuration, double breakDuration, double longBreakDirection)
   {
     durationOfFocus = minToSeconds(focusDuration);
@@ -185,17 +186,54 @@ class TimerService extends ChangeNotifier{
     );
   }
 
+  Future<History> getHistory() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    
+    String string = sharedPreferences.getString('history')!;
+    Map<String, dynamic> json = await jsonDecode(string);
+    History history = History.fromJson(json);
+
+    return history;
+  }
+
   setHistory() async {
-    Session newSession = Session(DateTime.now(), Random().nextDouble() * 2, Random().nextInt(6));
-    List<Session> newSessions = [newSession, newSession, newSession];
+    History history = await getHistory();
 
-    History newHistory = History(Random().nextDouble() * 72, Random().nextInt(100), newSessions);
+    // // Session newSession = Session(DateTime.now(), Random().nextDouble() * 2, Random().nextInt(6));
+    // Session newSession = Session(DateTime.now(), 1, 10);
+    // List<Session> newSessions = [newSession];
 
-    Map<String, dynamic> jsonMap = newHistory.toJson();
+    // // History newHistory = History(Random().nextDouble() * 72, Random().nextInt(100), newSessions);
+    // History newHistory = History(1 / 24, 10, newSessions);
+
+    history.totalNumberOfSessions += 1;
+    if (appStatus == AppStatus.shortBreak) {
+      history.totalTimeWorkedInDays += durationOfBreak / 24;
+    } else {
+      history.totalTimeWorkedInDays += durationOfFocus / 24;
+    }
+
+    history.sessions.forEach((session) {
+      if (isSameDay(session.date, DateTime.now())) {
+        print ("its todayyyyyyyyyyyyyy");
+        session.totalOfSessions += 1;
+        session.workedTimeInHours += durationOfFocus;
+      }
+    });
+
+    Map<String, dynamic> jsonMap = history.toJson();
     String json = jsonEncode(jsonMap);
 
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString('history', "Nouvel historique (depuis le service) : $json");
+    sharedPreferences.setString('history', json);
   }
+
+  static bool isSameDay(DateTime? dateA, DateTime? dateB) {
+  return
+    dateA?.year == dateB?.year &&
+    dateA?.month == dateB?.month &&
+    dateA?.day == dateB?.day;
+  }
+
   
 }
