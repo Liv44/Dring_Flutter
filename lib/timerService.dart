@@ -205,21 +205,27 @@ class TimerService extends ChangeNotifier{
 
     // // History newHistory = History(Random().nextDouble() * 72, Random().nextInt(100), newSessions);
     // History newHistory = History(1 / 24, 10, newSessions);
-
-    history.totalNumberOfSessions += 1;
-    if (appStatus == AppStatus.shortBreak) {
-      history.totalTimeWorkedInDays += durationOfBreak / 24;
-    } else {
-      history.totalTimeWorkedInDays += durationOfFocus / 24;
-    }
-
-    history.sessions.forEach((session) {
-      if (isSameDay(session.date, DateTime.now())) {
-        print ("its todayyyyyyyyyyyyyy");
-        session.totalOfSessions += 1;
-        session.workedTimeInHours += durationOfFocus;
+    if(history != null) {
+      history.totalNumberOfSessions += 1;
+      if (appStatus == AppStatus.shortBreak) {
+        history.totalTimeWorkedInDays += durationOfBreak / 24;
+      } else {
+        history.totalTimeWorkedInDays += durationOfFocus / 24;
       }
-    });
+
+      for (var session in history.sessions) {
+        if (isSameDay(session.date, DateTime.now())) {
+          session.totalOfSessions += 1;
+          session.workedTimeInHours += durationOfFocus / 60;
+          break;
+        }
+        Session newSession = Session(DateTime.now(), durationOfFocus / 60, 1 );
+        history.sessions.add(newSession);
+      }
+    } else {
+      Session newSession = Session(DateTime.now(), durationOfFocus / 60, 1 );
+      history = History((durationOfFocus / 60) / 24, 1, [newSession]);
+    }
 
     Map<String, dynamic> jsonMap = history.toJson();
     String json = jsonEncode(jsonMap);
