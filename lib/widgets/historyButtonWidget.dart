@@ -37,11 +37,11 @@ class _HistoryButtonWidgetState extends State<HistoryButtonWidget> {
 
   List<DayHistoryWidget> getSession(List<Session> sessions) {
     List<DayHistoryWidget> widgetList = [];
-    for (int i = 0; i < sessions.length; i++) {
+    for (int i = sessions.length - 1; i >= 0; i--) {
       Session session = sessions[i];
       DayHistoryWidget newItem = DayHistoryWidget(
         date: session.date, 
-        workTimeInHours: session.workedTimeInHours.round(), 
+        workTimeInHours: session.workedTimeInHours, 
         numberOfSessions: session.totalOfSessions
       );
       widgetList.add(newItem);

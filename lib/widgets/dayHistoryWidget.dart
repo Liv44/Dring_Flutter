@@ -12,7 +12,7 @@ class DayHistoryWidget extends StatefulWidget {
   });
 
   final DateTime date;
-  final int workTimeInHours;
+  final double workTimeInHours;
   final int numberOfSessions;
 
   @override
@@ -36,7 +36,7 @@ class _DayhistorywidgetState extends State<DayHistoryWidget> {
       iconColor: Colors.black,
       children: [
           Text(
-            "Total work time : ${widget.workTimeInHours} hours",
+            "Total work time : ${widget.workTimeInHours.round()} hours",
             style: textStyle(13, Colors.black ,FontWeight.w200),
           ),
           newSeparator(10),

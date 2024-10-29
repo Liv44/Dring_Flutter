@@ -199,32 +199,35 @@ class TimerService extends ChangeNotifier{
   setHistory() async {
     History history = await getHistory();
 
-    // // Session newSession = Session(DateTime.now(), Random().nextDouble() * 2, Random().nextInt(6));
-    // Session newSession = Session(DateTime.now(), 1, 10);
-    // List<Session> newSessions = [newSession];
-
-    // // History newHistory = History(Random().nextDouble() * 72, Random().nextInt(100), newSessions);
-    // History newHistory = History(1 / 24, 10, newSessions);
     if(history != null) {
+      
       history.totalNumberOfSessions += 1;
       if (appStatus == AppStatus.shortBreak) {
-        history.totalTimeWorkedInDays += durationOfBreak / 24;
+        history.totalTimeWorkedInDays += minToDays(secondsToMinutes(durationOfBreak));
       } else {
-        history.totalTimeWorkedInDays += durationOfFocus / 24;
+        history.totalTimeWorkedInDays += minToDays(secondsToMinutes(durationOfFocus));
       }
 
-      for (var session in history.sessions) {
-        if (isSameDay(session.date, DateTime.now())) {
-          session.totalOfSessions += 1;
-          session.workedTimeInHours += durationOfFocus / 60;
+      int? sessionToModify;
+      for (int i = 0; i < history.sessions.length; i++)
+      {
+        if (isSameDay(history.sessions[i].date, DateTime.now())) {
+          sessionToModify = i;
           break;
         }
-        Session newSession = Session(DateTime.now(), durationOfFocus / 60, 1 );
+      }
+
+      if (sessionToModify != null) {
+        history.sessions[sessionToModify].totalOfSessions += 1;
+        history.sessions[sessionToModify].workedTimeInHours += minToHours(secondsToMinutes(durationOfFocus));
+      } else {
+        Session newSession = Session(DateTime.now(), minToHours(secondsToMinutes(durationOfFocus)), 1 );
         history.sessions.add(newSession);
       }
+      
     } else {
-      Session newSession = Session(DateTime.now(), durationOfFocus / 60, 1 );
-      history = History((durationOfFocus / 60) / 24, 1, [newSession]);
+      Session newSession = Session(DateTime.now(), minToHours(secondsToMinutes(durationOfFocus)), 1 );
+      history = History(minToDays(secondsToMinutes(durationOfFocus)), 1, [newSession]);
     }
 
     Map<String, dynamic> jsonMap = history.toJson();
