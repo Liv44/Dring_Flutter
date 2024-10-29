@@ -16,10 +16,6 @@ class TimerWidget extends StatelessWidget {
     return Column(
       children: [
         Text(
-          "rounds : ${provider.round}",
-          style: textStyle(10, Colors.black, FontWeight.w400),
-        ),
-        Text(
           provider.statusString,
           style: textStyle(14, 
             provider.appStatus == AppStatus.focus ? Colors.green: (provider.appStatus == AppStatus.shortBreak ? Colors.blue : (provider.appStatus == AppStatus.longBreak ? Colors.purple : Colors.black)), 
