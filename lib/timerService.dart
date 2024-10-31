@@ -82,7 +82,6 @@ class TimerService extends ChangeNotifier {
 
   void timerEnded() {
     round++;
-    setHistory();
     if (appStatus == AppStatus.focus) {
       if (round >= 8) {
         triggerNotification("Dring ! Timer is up !",
@@ -95,6 +94,7 @@ class TimerService extends ChangeNotifier {
             "Focus time is over, time for a short break !");
         setAppStatus(AppStatus.shortBreak);
         setTimerTime(durationOfBreak);
+        setHistory();
       }
       timeLeft++; //Otherwise the first second of the break time is cut
     } else if (appStatus == AppStatus.shortBreak ||
