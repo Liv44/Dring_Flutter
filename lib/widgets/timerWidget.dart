@@ -17,10 +17,16 @@ class TimerWidget extends StatelessWidget {
       children: [
         Text(
           provider.statusString,
-          style: textStyle(14, 
-            provider.appStatus == AppStatus.focus ? Colors.green: (provider.appStatus == AppStatus.shortBreak ? Colors.blue : (provider.appStatus == AppStatus.longBreak ? Colors.purple : Colors.black)), 
-            FontWeight.w500
-          ),
+          style: textStyle(
+              14,
+              provider.appStatus == AppStatus.focus
+                  ? Colors.teal
+                  : (provider.appStatus == AppStatus.shortBreak
+                      ? Colors.blue
+                      : (provider.appStatus == AppStatus.longBreak
+                          ? Colors.purple
+                          : Colors.black)),
+              FontWeight.w500),
         ),
         newSeparator(5),
         Text(
@@ -29,11 +35,17 @@ class TimerWidget extends StatelessWidget {
         ),
         newSeparator(5),
         const ProgressDotsWidget(),
-        Container(width: 60,height: 60, margin: const EdgeInsets.all(7), decoration: BoxDecoration(color: Colors.green[50], borderRadius: const BorderRadius.all(Radius.circular(100))),
+        Container(
+          width: 60,
+          height: 60,
+          margin: const EdgeInsets.all(7),
+          decoration: BoxDecoration(
+              color: Colors.teal[50],
+              borderRadius: const BorderRadius.all(Radius.circular(100))),
           child: IconButton(
-            icon : provider.isPlaying 
-              ? Icon(Icons.pause, size: 40, color: Colors.green[500]) 
-              : Icon(Icons.play_arrow, size: 40, color: Colors.green[500]),
+            icon: provider.isPlaying
+                ? Icon(Icons.pause, size: 40, color: Colors.teal[500])
+                : Icon(Icons.play_arrow, size: 40, color: Colors.teal[500]),
             onPressed: () {
               if (provider.isPlaying) {
                 provider.stopTimer();
@@ -51,13 +63,16 @@ class TimerWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(width: 60,height: 60, margin: const EdgeInsets.all(7), 
+            Container(
+              width: 60,
+              height: 60,
+              margin: const EdgeInsets.all(7),
               decoration: const BoxDecoration(
-                color: Colors.transparent, 
-                borderRadius: BorderRadius.all(Radius.circular(100))
-              ),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.all(Radius.circular(100))),
               child: IconButton(
-                icon : Icon(Icons.replay_outlined, size: 40, color: Colors.green[500]),
+                icon: Icon(Icons.replay_outlined,
+                    size: 40, color: Colors.teal[500]),
                 onPressed: () {
                   provider.resetTimer();
                 },

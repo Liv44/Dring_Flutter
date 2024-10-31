@@ -6,7 +6,7 @@ class ProgressWidget extends StatefulWidget {
     this.progression = 0,
     this.divisions = 5,
     this.emptyColor = Colors.grey,
-    this.filledColor = Colors.green,
+    this.filledColor = Colors.teal,
     this.isInUse = false,
     this.isFilled = false,
   });
@@ -32,12 +32,13 @@ class _ProgressWidgetState extends State<ProgressWidget> {
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         child: LinearProgressIndicator(
-          color: widget.filledColor,
-          backgroundColor: widget.emptyColor,
-          value: (widget.isInUse) 
-            ? 1 - ((1/ widget.divisions) * widget.progression) 
-            : (widget.isFilled) ? 1 : 0
-        ),
+            color: widget.filledColor,
+            backgroundColor: widget.emptyColor,
+            value: (widget.isInUse)
+                ? 1 - ((1 / widget.divisions) * widget.progression)
+                : (widget.isFilled)
+                    ? 1
+                    : 0),
       ),
     );
   }

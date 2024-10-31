@@ -1,4 +1,3 @@
-
 import 'dart:collection';
 
 class History {
@@ -6,14 +5,15 @@ class History {
   int totalNumberOfSessions = 0;
   List<Session> sessions = [];
 
-  History(this.totalTimeWorkedInDays, this.totalNumberOfSessions, this.sessions);
+  History(
+      this.totalTimeWorkedInDays, this.totalNumberOfSessions, this.sessions);
 
   Map<String, dynamic> sessionToJson() {
     Map<String, dynamic> sessionsJson = <String, dynamic>{};
     for (var session in sessions) {
       var sessionJson = <String, dynamic>{
         'date': session.date,
-        'workedTimeInHours': session.workedTimeInHours,
+        'workedTimeInSeconds': session.workedTimeInSeconds,
         'totalOfSessions': session.totalOfSessions
       };
 
@@ -45,20 +45,17 @@ class History {
       newSessionList.add(Session.fromJson(sessionTyped));
     });
 
-    return History( 
-      json['totalTimeWorkedInDays'] as double,
-      json['totalNumberOfSessions'] as int,
-      newSessionList
-    );
+    return History(json['totalTimeWorkedInDays'] as double,
+        json['totalNumberOfSessions'] as int, newSessionList);
   }
 }
 
 class Session {
   DateTime date = DateTime.now();
-  double workedTimeInHours = 0;
+  double workedTimeInSeconds = 0;
   int totalOfSessions = 0;
 
-  Session(this.date, this.workedTimeInHours, this.totalOfSessions);
+  Session(this.date, this.workedTimeInSeconds, this.totalOfSessions);
 
   String dateToJson() {
     return "${date.day},${date.month},${date.year}";
@@ -66,22 +63,20 @@ class Session {
 
   static DateTime jsonToDate(String string) {
     List list = string.split(',');
-    DateTime result = DateTime(int.parse(list[2]), int.parse(list[1]), int.parse(list[0]));
+    DateTime result =
+        DateTime(int.parse(list[2]), int.parse(list[1]), int.parse(list[0]));
     return result;
   }
 
   Map<String, dynamic> toJson() => {
-    'date': dateToJson(),
-    'workedTimeInHours': workedTimeInHours,
-    'totalOfSessions': totalOfSessions
-  };
+        'date': dateToJson(),
+        'workedTimeInSeconds': workedTimeInSeconds,
+        'totalOfSessions': totalOfSessions
+      };
 
   factory Session.fromJson(Map<String, dynamic> json) {
     DateTime newDate = jsonToDate(json['date']);
-    return Session(
-      newDate,
-      json['workedTimeInHours'] as double ,
-      json['totalOfSessions'] as int 
-    );
+    double workedTime = (json['workedTimeInSeconds'] ?? 0).toDouble();
+    return Session(newDate, workedTime, json['totalOfSessions'] as int);
   }
 }

@@ -6,7 +6,6 @@ import 'package:dring/widgets/dayHistoryWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class HistoryButtonWidget extends StatefulWidget {
   const HistoryButtonWidget({super.key});
 
@@ -25,7 +24,7 @@ class _HistoryButtonWidgetState extends State<HistoryButtonWidget> {
 
   getHistory() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    
+
     String string = sharedPreferences.getString('history')!;
     Map<String, dynamic> json = await jsonDecode(string);
     History fromJson = History.fromJson(json);
@@ -40,68 +39,60 @@ class _HistoryButtonWidgetState extends State<HistoryButtonWidget> {
     for (int i = sessions.length - 1; i >= 0; i--) {
       Session session = sessions[i];
       DayHistoryWidget newItem = DayHistoryWidget(
-        date: session.date, 
-        workTimeInHours: session.workedTimeInHours, 
-        numberOfSessions: session.totalOfSessions
-      );
+          date: session.date,
+          workTimeInSeconds: session.workedTimeInSeconds,
+          numberOfSessions: session.totalOfSessions);
       widgetList.add(newItem);
     }
     return widgetList;
-  } 
-  
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 60,
-      height: 60, 
-      margin: const EdgeInsets.all(7), 
-
+      height: 60,
+      margin: const EdgeInsets.all(7),
       decoration: const BoxDecoration(
-        color: Colors.transparent, 
-        borderRadius: BorderRadius.all(Radius.circular(100))
-      ),
-
+          color: Colors.transparent,
+          borderRadius: BorderRadius.all(Radius.circular(100))),
       child: IconButton(
-        icon : Icon(Icons.book, size: 40, color: Colors.green[500]),
-        
+        icon: Icon(Icons.book, size: 40, color: Colors.teal[500]),
         onPressed: () {
           getHistory();
           showDialog(
-            context: context, 
-            
+            context: context,
             builder: (context) => AlertDialog(
-              title: Text('History', style: textStyle(25, Colors.black, FontWeight.w700),),
-
+              title: Text(
+                'History',
+                style: textStyle(25, Colors.black, FontWeight.w700),
+              ),
               contentPadding: const EdgeInsets.all(20),
-
               content: SingleChildScrollView(
-                child : Column(
-                  crossAxisAlignment : CrossAxisAlignment.start,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Total number of days worked :  ${history.totalTimeWorkedInDays.round()} days",
+                      "Total number of days worked :  ${history.sessions.length.round()} days",
                       style: textStyle(15, Colors.black, FontWeight.w200),
                     ),
                     newSeparator(15),
                     Text(
-                      "Total number of sessions : ${history.totalNumberOfSessions} sessions",
+                      "Total number of sessions : ${history.sessions.fold(0.0, (total, session) => total + session.totalOfSessions)} sessions",
                       style: textStyle(15, Colors.black, FontWeight.w200),
                     ),
                     newSeparator(15),
-
                     Column(
-                     children: getSession(history.sessions),
+                      children: getSession(history.sessions),
                     ),
                   ],
                 ),
               ),
-
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-
                   child: const Text('Close'),
                 ),
               ],

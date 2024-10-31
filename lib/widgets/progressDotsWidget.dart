@@ -4,7 +4,7 @@ import 'progressWidget.dart';
 import '../timerService.dart';
 
 class ProgressDotsWidget extends StatelessWidget {
-  const ProgressDotsWidget ({super.key});
+  const ProgressDotsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class ProgressDotsWidget extends StatelessWidget {
       children: [
         ProgressWidget(
           filledColor: provider.colorsOfProgressWidgets[0],
-          emptyColor: Colors.green[100],
+          emptyColor: Colors.teal[100],
           divisions: provider.durationOfFocus,
           progression: (provider.timeLeft),
           isInUse: provider.inUseProgressWidgets[0],
@@ -23,7 +23,7 @@ class ProgressDotsWidget extends StatelessWidget {
         ),
         ProgressWidget(
           filledColor: provider.colorsOfProgressWidgets[1],
-          emptyColor: Colors.green[100],
+          emptyColor: Colors.teal[100],
           divisions: provider.durationOfFocus,
           progression: (provider.timeLeft),
           isInUse: provider.inUseProgressWidgets[1],
@@ -31,7 +31,7 @@ class ProgressDotsWidget extends StatelessWidget {
         ),
         ProgressWidget(
           filledColor: provider.colorsOfProgressWidgets[2],
-          emptyColor: Colors.green[100],
+          emptyColor: Colors.teal[100],
           divisions: provider.durationOfFocus,
           progression: (provider.timeLeft),
           isInUse: provider.inUseProgressWidgets[2],
@@ -39,7 +39,7 @@ class ProgressDotsWidget extends StatelessWidget {
         ),
         ProgressWidget(
           filledColor: provider.colorsOfProgressWidgets[3],
-          emptyColor: Colors.green[100],
+          emptyColor: Colors.teal[100],
           divisions: provider.durationOfFocus,
           progression: (provider.timeLeft),
           isInUse: provider.inUseProgressWidgets[3],
